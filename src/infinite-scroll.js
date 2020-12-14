@@ -15,6 +15,7 @@ angular.module(MODULE_NAME, [])
       infiniteScrollDisabled: '=',
       infiniteScrollUseDocumentBottom: '=',
       infiniteScrollListenForEvent: '@',
+      infiniteScrollKill: '='
     },
 
     link(scope, elem, attrs) {
@@ -28,6 +29,8 @@ angular.module(MODULE_NAME, [])
       let useDocumentBottom = false;
       let unregisterEventListener = null;
       let checkInterval = false;
+
+      if (typeof scope.infiniteScrollKill == "undefined") scope.infiniteScrollKill = true;
 
       function height(element) {
         const el = element[0] || element;
@@ -61,6 +64,9 @@ angular.module(MODULE_NAME, [])
       // with a boolean that is set to true when the function is
       // called in order to throttle the function call.
       function defaultHandler() {
+        if (!scope.infiniteScrollKill) {
+          return;
+        }
         let containerBottom;
         let elementBottom;
         if (container === windowElement) {
